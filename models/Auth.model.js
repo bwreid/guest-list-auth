@@ -18,9 +18,19 @@ class Auth {
     })
   }
 
+  static isVip (token) {
+    return Auth.isAuthenticated(token).then(payload => {
+      if (payload.sub.role !== 'user') {
+        return payload
+      } else {
+        throw new Error()
+      }
+    })
+  }
+
   static isAdmin (id, token) {
     return Auth.isAuthenticated(token).then(payload => {
-      if (payload.sub.role == 'admin') {
+      if (payload.sub.role === 'admin') {
         return payload
       } else {
         throw new Error()
