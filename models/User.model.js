@@ -1,11 +1,20 @@
 const db = require('../db')
 const Model = require('./Model')('users')
 
+const { sign } = require('jsonwebtoken')
+const { promisify } = require('util')
+const signAsync = promisify(sign)
+
 class User extends Model {
   static login (email, password) {
     return db('users').where({ email }).first().then(user => {
       if (user.password === password) {
-        return user
+        const { id, role } = user
+        const sub = { id, role }
+        const expiresIn = '30 days'
+        const secret = process.env.SECRET_KEY
+        
+        return signAsync({ sub }, secret, { expiresIn })
       } else {
         throw new Error(`User authentication failed`)
       }

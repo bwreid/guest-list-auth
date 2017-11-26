@@ -5,7 +5,7 @@ class UsersController extends Controller {
   static login (req, res, next) {
     const { email, password } = req.body
     User.login(email, password)
-    .then(user => res.json({ user }))
+    .then(token => res.json({ token }))
     .catch(() => {
       const status = 401
       const message = `Please check your email and password`
@@ -21,6 +21,28 @@ class UsersController extends Controller {
       const status = 400
       const message = error.message || `Please check your email and password`
       res.status(status).json({ status, message })
+    })
+  }
+
+  static isAuthenticated (req, res, next) {
+    const token = req.headers.authorization.replace('Bearer ', '')
+    User.isAuthenticated(token)
+    .then(() => next())
+    .catch(() => {
+      const status = 401
+      const message = `Invalid credentials; please login and try again`
+      next({ status, message })
+    })
+  }
+
+  static isUser (req, res, next) {
+    const token = req.headers.authorization.replace('Bearer ', '')
+    User.isUser(req.params.id, token)
+    .then(() => next())
+    .catch(() => {
+      const status = 401
+      const message = `You do not have sufficient permissions`
+      next({ status, message })
     })
   }
 }
