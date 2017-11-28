@@ -1,5 +1,5 @@
-const { verify } = require('jsonwebtoken')
 const { promisify } = require('util')
+const { verify } = require('jsonwebtoken')
 const verifyAsync = promisify(verify)
 
 class Auth {
@@ -10,31 +10,25 @@ class Auth {
 
   static isUser (id, token) {
     return Auth.isAuthenticated(token).then(payload => {
-      if (payload.sub.id == id) {
-        return payload
-      } else {
-        throw new Error()
-      }
+      if (payload.sub.id != id) throw new Error(`You are not authorized to access that route`)
+
+      return payload
     })
   }
 
   static isVip (token) {
     return Auth.isAuthenticated(token).then(payload => {
-      if (payload.sub.role !== 'user') {
-        return payload
-      } else {
-        throw new Error()
-      }
+      if (payload.sub.role === 'user') throw new Error(`You are not authorized to access that route`)
+
+      return payload
     })
   }
 
   static isAdmin (id, token) {
     return Auth.isAuthenticated(token).then(payload => {
-      if (payload.sub.role === 'admin') {
-        return payload
-      } else {
-        throw new Error()
-      }
+      if (payload.sub.role !== 'admin') throw new Error(`You are not authorized to access that route`)
+
+      return payload
     })
   }
 }
