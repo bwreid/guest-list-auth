@@ -8,8 +8,7 @@ class User extends Model {
     return db('users').where({ email }).first().then(user => {
       if (user.password !== password) throw new Error()
 
-      const token = new Token(user)
-      return token.value
+      return Token.signToken(user)
     }).catch(() => { throw new Error(`User authentication failed`) })
   }
 
