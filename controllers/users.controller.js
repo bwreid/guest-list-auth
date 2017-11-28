@@ -1,5 +1,6 @@
+const { TABLE_NAMES } = require('../constants')
 const User = require('../models/User.model')
-const Controller = require('./Controller')('users')
+const Controller = require('./Controller')(TABLE_NAMES.USER)
 
 class UsersController extends Controller {
   static login (req, res, next) {

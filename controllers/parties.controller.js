@@ -1,7 +1,8 @@
+const { TABLE_NAMES } = require('../constants')
 const { parseToken, errorHandler } = require('../lib/auth')
 const Auth = require('../models/Auth.model')
 const Party = require('../models/Party.model')
-const Controller = require('./Controller')('parties')
+const Controller = require('./Controller')(TABLE_NAMES.PARTY)
 
 class PartiesController extends Controller {
   static index (req, res, next) {

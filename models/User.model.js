@@ -1,5 +1,6 @@
+const { TABLE_NAMES } = require('../constants')
 const db = require('../db')
-const Model = require('./Model')('users')
+const Model = require('./Model')(TABLE_NAMES.USER)
 
 const { sign } = require('jsonwebtoken')
 const { promisify } = require('util')
@@ -13,7 +14,7 @@ class User extends Model {
         const sub = { id, role }
         const expiresIn = '30 days'
         const secret = process.env.SECRET_KEY
-        
+
         return signAsync({ sub }, secret, { expiresIn })
       } else {
         throw new Error(`User authentication failed`)
