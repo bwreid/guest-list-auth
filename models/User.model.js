@@ -6,19 +6,19 @@ const Token = require('./Token.model')
 class User extends Model {
   static login (email, password) {
     return db('users').where({ email }).first().then(user => {
-      if (user.password !== password) throw new Error(`User authentication failed`)
+      if (user.password !== password) throw new Error()
 
       const token = new Token(user)
       return token.value
-    }).catch(error => { throw new Error(error) })
+    }).catch(() => { throw new Error(`User authentication failed`) })
   }
 
   static signup (email, password) {
     return db('users').where({ email }).first().then(user => {
-      if (user) throw new Error(`Email has already been taken`)
+      if (user) throw new Error()
 
       return User.create({ email, password })
-    }).catch(error => { throw new Error(error) })
+    }).catch(() => { throw new Error(`User signup failed`) })
   }
 }
 

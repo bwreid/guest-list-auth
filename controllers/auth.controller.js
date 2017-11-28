@@ -1,32 +1,26 @@
-const { parseToken, errorHandler } = require('../lib/auth')
 const Auth = require('../models/Auth.model')
+const Token = require('../models/Token.model')
 
 class AuthController {
   static isAuthenticated (req, res, next) {
-    const token = parseToken(req.headers)
-    if (!token) return errorHandler(next)()
-
-    Auth.isAuthenticated(token)
+    const bearer = req.headers.authorization
+    Auth.isAuthenticated(bearer)
     .then(() => next())
-    .catch(errorHandler(next))
+    .catch(next)
   }
 
   static isUser (req, res, next) {
-    const token = parseToken(req.headers)
-    if (!token) return errorHandler(next)()
-
-    Auth.isUser(req.params.id, token)
+    const bearer = req.headers.authorization
+    Auth.isUser(req.params.id, bearer)
     .then(() => next())
-    .catch(errorHandler(next))
+    .catch(next)
   }
 
   static isAdmin (req, res, next) {
-    const token = parseToken(req.headers)
-    if (!token) return errorHandler(next)()
-
-    Auth.isAdmin(req.params.id, token)
+    const bearer = req.headers.authorization
+    Auth.isAdmin(req.params.id, bearer)
     .then(() => next())
-    .catch(errorHandler(next))
+    .catch(next)
   }
 }
 

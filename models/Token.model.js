@@ -1,5 +1,7 @@
 require('dotenv').load()
-const { sign } = require('jsonwebtoken')
+const { promisify } = require('util')
+const { sign, verify } = require('jsonwebtoken')
+const verifyAsync = promisify(verify)
 
 class Token {
   constructor ({ id, role }) {
@@ -10,6 +12,11 @@ class Token {
 
   get value () {
     return sign(this.sub, this.secret, this.expiresIn)
+  }
+
+  static parseTokenFromBearerAsync (bearer) {
+    const token = bearer ? bearer.replace('Bearer ', '') : null
+    return verifyAsync(token, process.env.SECRET_KEY)
   }
 }
 

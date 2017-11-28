@@ -1,11 +1,10 @@
-const { promisify } = require('util')
-const { verify } = require('jsonwebtoken')
-const verifyAsync = promisify(verify)
+const Token = require('./Token.model')
 
 class Auth {
   static isAuthenticated (token) {
-    const secret = process.env.SECRET_KEY
-    return verifyAsync(token, secret)
+    return Token.parseTokenFromBearerAsync(token).catch(error => {
+      throw new Error(`You are not authorized to access that route`)
+    })
   }
 
   static isUser (id, token) {
