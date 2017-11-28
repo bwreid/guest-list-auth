@@ -24,28 +24,6 @@ class UsersController extends Controller {
       res.status(status).json({ status, message })
     })
   }
-
-  static isAuthenticated (req, res, next) {
-    const token = req.headers.authorization.replace('Bearer ', '')
-    User.isAuthenticated(token)
-    .then(() => next())
-    .catch(() => {
-      const status = 401
-      const message = `Invalid credentials; please login and try again`
-      next({ status, message })
-    })
-  }
-
-  static isUser (req, res, next) {
-    const token = req.headers.authorization.replace('Bearer ', '')
-    User.isUser(req.params.id, token)
-    .then(() => next())
-    .catch(() => {
-      const status = 401
-      const message = `You do not have sufficient permissions`
-      next({ status, message })
-    })
-  }
 }
 
 module.exports = UsersController
