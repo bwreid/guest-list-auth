@@ -3,7 +3,8 @@ const Model = require('./Model')('users')
 
 class User extends Model {
   static login (email, password) {
-    return db('users').where({ email }).first().then(user => {
+    return db('users').where({ email }).first()
+    .then(user => {
       if (user.password === password) {
         return user
       } else {
@@ -13,13 +14,18 @@ class User extends Model {
   }
 
   static signup (email, password) {
-    return db('users').where({ email }).first().then(user => {
+    return db('users').where({ email }).first()
+    .catch(dberror=>{
+      throw
+    })
+    .then(user => {
       if (user) {
-        throw new Error(`Email has already been taken`)
+        throw { status: 400, message: `Email has already been taken` }
       } else {
         return User.create({ email, password })
       }
-    }).catch(() => { throw new Error() })
+    })
+
   }
 }
 

@@ -19,9 +19,7 @@ class UsersController extends Controller {
     User.signup(email, password)
     .then(user => res.json({ user }))
     .catch(error => {
-      const status = 400
-      const message = error.message || `Please check your email and password`
-      res.status(status).json({ status, message })
+      next({status: error.status || 500, message: error.message || `Please check your email and password`})
     })
   }
 }
