@@ -10,9 +10,9 @@ class Token {
     return sign({ sub }, secret, { expiresIn })
   }
 
-  static parseTokenFromBearerAsync (bearer) {
+  static parseToken (bearer) {
     const token = bearer ? bearer.replace('Bearer ', '') : null
-    return verifyAsync(token, process.env.SECRET_KEY)
+    return verify(token, process.env.SECRET_KEY)
   }
 }
 

@@ -2,12 +2,11 @@ const Token = require('./Token.model')
 
 class Auth {
   static isAuthenticated (token) {
-    return Token.parseTokenFromBearerAsync(token).catch(error => {
-      throw new Error(`You are not authorized to access that route`)
-    })
+    return Token.parseToken(token)
   }
 
-  static isUser (id, token) {
+  // is the user the specific user
+  static isTheUser (id, token) {
     return Auth.isAuthenticated(token).then(payload => {
       if (payload.sub.id != id) throw new Error(`You are not authorized to access that route`)
 
@@ -15,6 +14,7 @@ class Auth {
     })
   }
 
+  // is the user a vip level
   static isVip (token) {
     return Auth.isAuthenticated(token).then(payload => {
       if (payload.sub.role === 'user') throw new Error(`You are not authorized to access that route`)
@@ -23,7 +23,7 @@ class Auth {
     })
   }
 
-  static isAdmin (id, token) {
+  static isAdmin (token) {
     return Auth.isAuthenticated(token).then(payload => {
       if (payload.sub.role !== 'admin') throw new Error(`You are not authorized to access that route`)
 
